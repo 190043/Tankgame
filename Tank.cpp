@@ -55,6 +55,12 @@ void Tank::Update()
 	}
 	Camera::SetTarget(transform_.position_);
 
+	XMVECTOR camVec = { 0,6.0f,-15.0f };//カメラの位置を設定する
+	//XMMATRIX matt;
+	matt = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.vecY));
+	camVec = XMVector3TransformCoord(camVec, matt);
+	Camera::SetPosition(transform_.position_ + camVec );//カメラのポジションは、戦車の位置＋カメラの位置を設定したもので写せるようにできる。
+	
 }
 
 //描画
