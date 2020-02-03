@@ -1,7 +1,9 @@
 #include "Tank.h"
+
 #include "Engine/Model.h"
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
+#include "Ground.h"
 //コンストラクタ
 Tank::Tank(GameObject * parent)
 	:GameObject(parent, "Tank"), hModel_(-1)
@@ -54,13 +56,28 @@ void Tank::Update()
 		transform_.rotate_.vecY += 3;
 	}
 	Camera::SetTarget(transform_.position_);
-
+	//カメラの位置
 	XMVECTOR camVec = { 0,6.0f,-15.0f };//カメラの位置を設定する
-	//XMMATRIX matt;
+	
 	matt = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.vecY));
 	camVec = XMVector3TransformCoord(camVec, matt);
 	Camera::SetPosition(transform_.position_ + camVec );//カメラのポジションは、戦車の位置＋カメラの位置を設定したもので写せるようにできる。
-	
+	//地面に添わせる
+	Ground* pGround = (Ground*)FindObject("Ground.fbx");    //グラウンド.fbxというゲームオブジェクトを探す
+	int hGroundModel = pGround->GetModelHandle();    //モデル番号を取得
+
+	//レイを飛ばす
+	RayCastData data;
+	data.start = transform_.position_;   //レイの発射位置
+	data.dir = XMVectorSet(0, -1, 0, 0); //レイの方向
+	Model::RayCast(hGroundModel, &data); //レイを発射
+
+	//レイが当たったら
+	if (data.hit)
+	{
+		//その分位置を下げる
+		transform_.position_.vecY -= data.dist;
+	}
 }
 
 //描画
