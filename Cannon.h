@@ -2,26 +2,16 @@
 #include "Engine/GameObject.h"
 
 //◆◆◆を管理するクラス
-class Tank : public GameObject
+class Cannon : public GameObject
 {
-	int hModel_;    //モデル番号
-
-	//移動するための処理
-	//引数　なし
-	//戻り値　なし
-	void Move();
-
-	//地面に沿って動くための処理
-	//引数　なし
-	//戻り値 なし
-	void FitHeightToGround();
-
+	//const float SWING_SPEED;	
+	int hModel_;
 public:
 	//コンストラクタ
-	Tank(GameObject* parent);
+	Cannon(GameObject* parent);
 
 	//デストラクタ
-	~Tank();
+	~Cannon();
 
 	//初期化
 	void Initialize() override;

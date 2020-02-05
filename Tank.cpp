@@ -3,7 +3,10 @@
 #include "Engine/Model.h"
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
+
 #include "Ground.h"
+#include "Cannon.h"
+
 //コンストラクタ
 Tank::Tank(GameObject * parent)
 	:GameObject(parent, "Tank"), hModel_(-1)
@@ -21,10 +24,22 @@ void Tank::Initialize()
 	//モデルデータのロード
 	hModel_ = Model::Load("TankBody.fbx");
 	assert(hModel_ >= 0);//assert = アサートと読む！　　　成功した場合０以上の数字が入るが、失敗した場合-1が入り、絶対にできないようになっている。
+
+	Instantiate<Cannon>(this); //CannonをTankの子供として出していく。 PlaySceneのTankとGroundと同じもの
 }
 
 //更新
 void Tank::Update()
+{
+	Move();
+
+	FitHeightToGround();
+
+	
+}
+
+//移動のための処理
+void Tank::Move() 
 {
 	XMVECTOR move = { 0.0f, 0.0f, 0.1f, 0.0f };     //順番に x, y, z, もう一つといった順番になっている。もう一つは四次元限定なので、3次元の場合は
 	//ほとんど使うことはない
@@ -58,10 +73,15 @@ void Tank::Update()
 	Camera::SetTarget(transform_.position_);
 	//カメラの位置
 	XMVECTOR camVec = { 0,6.0f,-15.0f };//カメラの位置を設定する
-	
+
 	matt = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.vecY));
 	camVec = XMVector3TransformCoord(camVec, matt);
-	Camera::SetPosition(transform_.position_ + camVec );//カメラのポジションは、戦車の位置＋カメラの位置を設定したもので写せるようにできる。
+	Camera::SetPosition(transform_.position_ + camVec);//カメラのポジションは、戦車の位置＋カメラの位置を設定したもので写せるようにできる。
+}
+
+//高さを地面に合わせる
+void Tank::FitHeightToGround() 
+{
 	//地面に添わせる
 	Ground* pGround = (Ground*)FindObject("Ground");    //グラウンドというゲームオブジェクトを探す
 	int hGroundModel = pGround->GetModelHandle();    //モデル番号を取得
