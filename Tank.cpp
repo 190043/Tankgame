@@ -63,12 +63,15 @@ void Tank::Update()
 	camVec = XMVector3TransformCoord(camVec, matt);
 	Camera::SetPosition(transform_.position_ + camVec );//カメラのポジションは、戦車の位置＋カメラの位置を設定したもので写せるようにできる。
 	//地面に添わせる
-	Ground* pGround = (Ground*)FindObject("Ground.fbx");    //グラウンド.fbxというゲームオブジェクトを探す
+	Ground* pGround = (Ground*)FindObject("Ground");    //グラウンドというゲームオブジェクトを探す
 	int hGroundModel = pGround->GetModelHandle();    //モデル番号を取得
 
 	//レイを飛ばす
 	RayCastData data;
-	data.start = transform_.position_;   //レイの発射位置
+	data.start.vecX = transform_.position_.vecX;   //レイの発射位置 X
+	data.start.vecY = 0.0f;                        //レイの発射位置 Y
+	data.start.vecZ = transform_.position_.vecZ;   //レイの発射位置 Z
+
 	data.dir = XMVectorSet(0, -1, 0, 0); //レイの方向
 	Model::RayCast(hGroundModel, &data); //レイを発射
 
@@ -76,7 +79,7 @@ void Tank::Update()
 	if (data.hit)
 	{
 		//その分位置を下げる
-		transform_.position_.vecY -= data.dist;
+		transform_.position_.vecY = -data.dist;
 	}
 }
 
