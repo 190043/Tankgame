@@ -4,7 +4,7 @@
 //◆◆◆を管理するクラス
 class Bullet : public GameObject
 {
-
+	int hModel_;
 public:
 	//コンストラクタ
 	Bullet(GameObject* parent);

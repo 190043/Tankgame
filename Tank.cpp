@@ -63,19 +63,18 @@ void Tank::Move()
 
 	if (Input::IsKey(DIK_A))
 	{
-		transform_.rotate_.vecY -= 3;
+		transform_.rotate_.vecY -= 1;
 	}
 
 	if (Input::IsKey(DIK_D))
 	{
-		transform_.rotate_.vecY += 3;
+		transform_.rotate_.vecY += 1;
 	}
 	Camera::SetTarget(transform_.position_);
 	//カメラの位置
-	XMVECTOR camVec = { 0,6.0f,-15.0f };//カメラの位置を設定する
+	XMVECTOR camVec = { 0,8.0f,-15.0f };//カメラの位置を設定する
 
-	matt = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.vecY));
-	camVec = XMVector3TransformCoord(camVec, matt);
+	
 	Camera::SetPosition(transform_.position_ + camVec);//カメラのポジションは、戦車の位置＋カメラの位置を設定したもので写せるようにできる。
 }
 

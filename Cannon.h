@@ -4,7 +4,7 @@
 //◆◆◆を管理するクラス
 class Cannon : public GameObject
 {
-	//const float SWING_SPEED;	
+	const float SWING_SPEED;
 	int hModel_;
 public:
 	//コンストラクタ
